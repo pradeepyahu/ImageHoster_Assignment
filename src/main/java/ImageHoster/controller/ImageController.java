@@ -3,6 +3,7 @@ package ImageHoster.controller;
 import ImageHoster.model.Image;
 import ImageHoster.model.Tag;
 import ImageHoster.model.User;
+import ImageHoster.service.CommentService;
 import ImageHoster.service.ImageService;
 import ImageHoster.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class ImageController {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private CommentService commentService;
+
     //This method displays all the images in the user home page after successful login
     @RequestMapping("images")
     public String getUserImages(Model model) {
@@ -50,6 +54,7 @@ public class ImageController {
         Image image = imageService.getImage(Id);
         model.addAttribute("image", image);
         model.addAttribute("tags", image.getTags());
+        model.addAttribute("comments",commentService.getAllComments(Id));
         return "images/image";
     }
 
@@ -104,6 +109,7 @@ public class ImageController {
             String error = "Only the owner of the image can edit the image";
             model.addAttribute("image", image);
             model.addAttribute("editError", error);
+            model.addAttribute("comments",commentService.getAllComments(imageId));
             return "images/image";
         }
     }
@@ -139,7 +145,7 @@ public class ImageController {
         updatedImage.setDate(new Date());
 
         imageService.updateImage(updatedImage);
-        return "redirect:/images/" + updatedImage.getTitle();
+        return "redirect:/images/" +imageId+"/"+ updatedImage.getTitle();
     }
 
 
@@ -157,6 +163,7 @@ public class ImageController {
             String error = "Only the owner of the image can delete the image";
             model.addAttribute("image", image);
             model.addAttribute("deleteError", error);
+            model.addAttribute("comments",commentService.getAllComments(imageId));
             return "images/image";
         }
     }
