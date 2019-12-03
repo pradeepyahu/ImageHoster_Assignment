@@ -45,7 +45,7 @@ public class ImageController {
     //Also now you need to add the tags of an image in the Model type object
     //Here a list of tags is added in the Model type object
     //this list is then sent to 'images/image.html' file and the tags are displayed
-    @RequestMapping("/images/{Id}")
+    @RequestMapping("/images/{Id}/{title}")
     public String showImage(@PathVariable("Id") Integer Id, Model model) {
         Image image = imageService.getImage(Id);
         model.addAttribute("image", image);
@@ -154,7 +154,7 @@ public class ImageController {
             imageService.deleteImage(imageId);
             return "redirect:/images";
         } else {
-            String error = "Only the owner of the image can edit the image";
+            String error = "Only the owner of the image can delete the image";
             model.addAttribute("image", image);
             model.addAttribute("deleteError", error);
             return "images/image";
